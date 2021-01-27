@@ -1,0 +1,9 @@
+C:\Users\adu\Desktop\api\OopstonApi\bin\Debug\OopstonApi.exe.config
+C:\Users\adu\Desktop\api\OopstonApi\bin\Debug\OopstonApi.exe
+C:\Users\adu\Desktop\api\OopstonApi\bin\Debug\OopstonApi.pdb
+C:\Users\adu\Desktop\api\OopstonApi\bin\Debug\Newtonsoft.Json.dll
+C:\Users\adu\Desktop\api\OopstonApi\obj\Debug\zmPrint.csprojAssemblyReference.cache
+C:\Users\adu\Desktop\api\OopstonApi\obj\Debug\zmPrint.csproj.CoreCompileInputs.cache
+C:\Users\adu\Desktop\api\OopstonApi\obj\Debug\zmPrint.csproj.CopyComplete
+C:\Users\adu\Desktop\api\OopstonApi\obj\Debug\OopstonApi.exe
+C:\Users\adu\Desktop\api\OopstonApi\obj\Debug\OopstonApi.pdb

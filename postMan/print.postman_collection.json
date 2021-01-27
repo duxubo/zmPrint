@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "ef009487-108a-4b6a-b37f-7f3353c80a2e",
+		"name": "print",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"printUrl\", \"http://121.37.214.18:8001/pos-web\");\r",
+							"\r",
+							"pm.globals.set(\"appKey\", \"YW80606_HYGJ\");\r",
+							"pm.globals.set(\"appSecret\", \"816e76869da0542e1a853a9fda8445e25\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let resp=JSON.parse(responseBody)\r",
+							"\r",
+							"\r",
+							"pm.globals.set(\"token\", resp.body.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "appKey",
+							"value": "{{appKey}}",
+							"type": "text"
+						},
+						{
+							"key": "appSecret",
+							"value": "{{appSecret}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{printUrl}}/ois/order/getAuth",
+					"host": [
+						"{{printUrl}}"
+					],
+					"path": [
+						"ois",
+						"order",
+						"getAuth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "print",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"/**\r",
+							" * 字符串的全局替换\r",
+							" * @param oldText {string} 原始字符串\r",
+							" * @param searchValue {string} 需要替换的字符串\r",
+							" * @param replaceValue {string} 替换后的字符串\r",
+							" * @returns {string} 返回结果\r",
+							" */\r",
+							"function replaceAll(oldText, searchValue, replaceValue) {\r",
+							"    let result = oldText;\r",
+							"    // 检查是否是正则表达式\r",
+							"    // 如果是正则表达式，则获得匹配内容\r",
+							"    let search;\r",
+							"    if (searchValue) {\r",
+							"        // 首先去掉空格\r",
+							"        search = searchValue.match(/\\S+/g)[0];\r",
+							"        // 匹配以 / 符号开头 以 /img 形式结尾的内容\r",
+							"        search = search.search(/^\\/[\\s\\S]*?\\/[img]$/g);\r",
+							"    } else {\r",
+							"        search = -1;\r",
+							"    }\r",
+							"    // 为了方便直接创建一个数组用来存放需要替换的值\r",
+							"    let searchArray = [];\r",
+							"    if (search !== -1) {\r",
+							"        let pattern = searchValue.slice(searchValue.indexOf(\"\\/\") + 1, searchValue.lastIndexOf(\"\\/\"));\r",
+							"        let modifiers = searchValue.slice(searchValue.lastIndexOf(\"\\/\") + 1, searchValue.length);\r",
+							"        // 防止正则写的有问题，或者只是写的像正则实际不是而导致的 nothing to repeat 报错。\r",
+							"        try {\r",
+							"            search = oldText.match(new RegExp(pattern, modifiers));\r",
+							"        } catch (e) {\r",
+							"            console.log(e);\r",
+							"            // 报错则默认为是需要替换的文本\r",
+							"            search = null;\r",
+							"            searchArray.push(searchValue);\r",
+							"        }\r",
+							"        if (search !== null) {\r",
+							"            // 匹配成功后去掉重复项\r",
+							"            search.forEach(function (item1) {\r",
+							"                // if(searchArray.includes(item1)){}\r",
+							"                // IE 不支持 array.includes() 所以自己写一个循环吧\r",
+							"                // 数组中有相同元素则为 true\r",
+							"                let alreadyIn = false;\r",
+							"                searchArray.forEach(function (item2) {\r",
+							"                    if (item1 === item2) {\r",
+							"                        alreadyIn = true;\r",
+							"                    }\r",
+							"                });\r",
+							"                if (!alreadyIn) {\r",
+							"                    searchArray.push(item1);\r",
+							"                }\r",
+							"            });\r",
+							"        } else {\r",
+							"            // 匹配失败也默认为是需要替换的文本\r",
+							"            searchArray.push(searchValue);\r",
+							"        }\r",
+							"    } else {\r",
+							"        // 不是正则表达式也需要添加进数组\r",
+							"        searchArray.push(searchValue);\r",
+							"    }\r",
+							"    // 来循环吧，把 search 里的每个元素换一遍，当然首先里面要有元素\r",
+							"    if (searchValue) {\r",
+							"        let remaining = result;\r",
+							"        searchArray.forEach(function (item) {\r",
+							"            // 将上一次替换结束的字符串赋值给未扫描的字符串变量\r",
+							"            remaining = result;\r",
+							"            let array = [];\r",
+							"            let start = remaining.indexOf(item);\r",
+							"            console.log(start);\r",
+							"            // 没有匹配项则返回源字符串\r",
+							"            if (start === -1) {\r",
+							"                result = remaining;\r",
+							"            }\r",
+							"            while (start !== -1) {\r",
+							"                let end = start + item.length;\r",
+							"                array.push(remaining.slice(0, start));\r",
+							"                array.push(replaceValue);\r",
+							"                remaining = remaining.slice(end, remaining.length);\r",
+							"                start = remaining.indexOf(item);\r",
+							"                result = array.join(\"\") + remaining;\r",
+							"            }\r",
+							"        });\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"\r",
+							"var utils={\r",
+							"    appKey: pm.globals.get(\"appKey\"),\r",
+							"    appSecret:pm.globals.get(\"appSecret\"),\r",
+							"    token:pm.globals.get(\"token\"),\r",
+							"    ts:new Date().getTime(),\r",
+							"    nonce:\"slnkda\",\r",
+							"    version:\"1.0\",\r",
+							"    camouflageToken:function(){// 伪装token\r",
+							"        //2. 将组装token进行Base64. 如：Base64(token)\r",
+							"        let calToken='{\"nonce\":\"'+this.nonce+'\",\"timestamp\":'+this.ts+',\"token\":\"'+this.token+'\"}'\r",
+							"        console.info(\"计算伪装token json字符串  \"+ calToken);\r",
+							"        let kk=CryptoJS.enc.Utf8.parse(calToken)\r",
+							"        let tokenStr= CryptoJS.enc.Base64.stringify(kk);\r",
+							"        console.info(\"待替换的base64\"+tokenStr);\r",
+							"        // 3. 将 \"a\"->\"-\",\"c\"->\"#\",\"x\"->\"^\",\"M\"->\"$\"字符替换\r",
+							"        tokenStr=replaceAll(tokenStr,'a','-')\r",
+							"        tokenStr=replaceAll(tokenStr,'c','#')\r",
+							"        tokenStr=replaceAll(tokenStr,'x','^')\r",
+							"        tokenStr=replaceAll(tokenStr,'M','$')\r",
+							"        console.info(\"伪装后的token为：\"+tokenStr)\r",
+							"        return tokenStr;\r",
+							"    },\r",
+							"    genSign:function(paramsMap){// 签名计算\r",
+							"        console.info(this);\r",
+							"        console.info(utils);\r",
+							"        paramsMap[\"nonce\"]=this.nonce;\r",
+							"        paramsMap[\"timestamp\"]= this.ts;\r",
+							"        paramsMap[\"token\"]=this.token;\r",
+							"        paramsMap[\"version\"]=this.version;\r",
+							"        let pinStr=\"\";\r",
+							"        for (let key in paramsMap){\r",
+							"            if(pinStr.length > 0){\r",
+							"                pinStr=pinStr+\"&\" \r",
+							"            }\r",
+							"            pinStr=pinStr+(key+\"=\"+paramsMap[key])\r",
+							"        }\r",
+							"        let str=CryptoJS.enc.Utf8.parse(pinStr)\r",
+							"        let base64Str= CryptoJS.enc.Base64.stringify(str);\r",
+							"        let hash = CryptoJS.MD5(base64Str+this.appSecret ).toString().toUpperCase();\r",
+							"        console.info(hash);\r",
+							"        return hash;\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"let newToken=utils.camouflageToken()\r",
+							"let pMap=JSON.parse(JSON.stringify(request.data));\r",
+							"\r",
+							"let sign=utils.genSign(pMap) \r",
+							"pm.globals.set(\"newToken\", newToken);\r",
+							"pm.globals.set(\"sign\", sign);\r",
+							"pm.globals.set(\"version\", utils.version);\r",
+							"pm.globals.set(\"contentType\", \"application/x-www-form-urlencoded\");    \r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{newToken}}",
+						"type": "text"
+					},
+					{
+						"key": "sign",
+						"value": "{{sign}}",
+						"type": "text"
+					},
+					{
+						"key": "version",
+						"value": "{{version}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "body1",
+							"value": "{\"coid\":\"HXUCN\",\"clno\":\"YAF\",\"hubInCode\":\"义乌FEDEX-X-IP\",\"jobno\":\"test2020122101\",\"reCompany\":\"WEST\",\"reCountryCode\":\"US\",\"reCountry\":\"US\",\"reState\":\"NY\",\"reAddr\":\"5623  LGH  DKHGKG FHHHG \",\"reAddr2\":\"\",\"reZip\":\"10001\",\"reCity\":\"NEW YORK\",\"reConsinee\":\"WEST\",\"reTel\":\"5642256521\",\"reCctaxNo\":\"\",\"sdCompany\":\"SZ GM CO LTD\",\"sdCountryCode\":\"CN\",\"sdCountry\":\"CN\",\"sdState\":\"BAOAN\",\"sdAddr\":\"11 Blocks 202Huangtian Jinbi Industrial Zone, Baoan District, Shenzhen City\",\"sdAddr2\":\"\",\"sdAddr3\":\"\",\"sdCity\":\"SZ\",\"sdZip\":\"518102\",\"sdName\":\"SZ GM CO LTD\",\"sdTel\":\"13510522499\",\"pcs\":1,\"shipWeig\":0.5,\"packing\":\"WPX\",\"packagingType\":\"YOUR_PACKAGING\",\"descrType\":\"\",\"contents\":\"hello\",\"contents2\":\"\",\"contents3\":\"\",\"contentsCn\":\"\",\"decValue\":10,\"codCharge\":222,\"remark\":\"\",\"randAppendJobno\":1,\"invoice\":[{\"eDescrNamee\":\"SHOES\",\"descrName\":\"鞋子\",\"hsCode\":\"123123\",\"qty\":1,\"price\":10,\"totalPrice\":10,\"unit\":\"PCS\",\"gWeig\":0.02,\"nWeig\":0.02}]}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{printUrl}}/print",
+					"host": [
+						"{{printUrl}}"
+					],
+					"path": [
+						"print"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
