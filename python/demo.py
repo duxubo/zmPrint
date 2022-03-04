@@ -18,7 +18,7 @@ ts=int(round(time.time() * 1000))
 nonce='slnkda'
 version='1.0'
 
-# 获取token 参数
+# 获取token 参数 # // 打单的token获取接口 和订单的token接口 返回结构不同 这里要手动解析 切记
 postdatas = {'appKey': appKey,'appSecret': appSecret}
 r = requests.post(url, data=postdatas)
 authJsonStr=r.content  # 返回字节形式
