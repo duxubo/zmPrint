@@ -174,7 +174,7 @@ function callPrint(){
         'body1' => $body1
     );
     $request = new ZmRequest($appKey,$appSecret,$nonce,$version);
-    //1 获取原始token
+    //1 获取原始token // 这是打单的token获取接口，会自动解析返回值的token,订单接口这里要手动解析 切记
     $sourceToken=$request->getToken($url.'/auth/access/token/');
     var_dump(  '原始token:', $sourceToken);
     $request->setToken($sourceToken);
