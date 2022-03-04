@@ -6,7 +6,7 @@ import java.util.Map;
 import net.intelink.demo.print.utils.ZmRequest;
 
 /**
- *  ¶ÔÍâ´òµ¥½Ó¿Ú²âÊÔ
+ *  å¯¹å¤–æ‰“å•æ¥å£æµ‹è¯•
  * @author adu
  *
  */ 
@@ -20,28 +20,29 @@ public class TestPrint    {
     	String nonce = "slnkda";
     	String version= "1.0";
     	
-    	String body = "{\"coid\":\"HXUCN\",\"clno\":\"YAF\",\"hubInCode\":\"ÒåÎÚFEDEX-X-IP\",\"jobno\":\"test2020122101\",\"reCompany\":\"WEST\",\"reCountryCode\":\"US\",\"reCountry\":\"US\",\"reState\":\"NY\",\"reAddr\":\"5623  LGH  DKHGKG FHHHG \",\"reAddr2\":\"\",\"reZip\":\"10001\",\"reCity\":\"NEW YORK\",\"reConsinee\":\"WEST\",\"reTel\":\"5642256521\",\"reCctaxNo\":\"\",\"sdCompany\":\"SZ GM CO LTD\",\"sdCountryCode\":\"CN\",\"sdCountry\":\"CN\",\"sdState\":\"BAOAN\",\"sdAddr\":\"11 Blocks 202Huangtian Jinbi Industrial Zone, Baoan District, Shenzhen City\",\"sdAddr2\":\"\",\"sdAddr3\":\"\",\"sdCity\":\"SZ\",\"sdZip\":\"518102\",\"sdName\":\"SZ GM CO LTD\",\"sdTel\":\"13510522499\",\"pcs\":1,\"shipWeig\":0.5,\"packing\":\"WPX\",\"packagingType\":\"YOUR_PACKAGING\",\"descrType\":\"\",\"contents\":\"hello\",\"contents2\":\"\",\"contents3\":\"\",\"contentsCn\":\"\",\"decValue\":10,\"codCharge\":222,\"remark\":\"\",\"randAppendJobno\":1,\"invoice\":[{\"eDescrNamee\":\"SHOES\",\"descrName\":\"Ğ¬×Ó\",\"hsCode\":\"123123\",\"qty\":1,\"price\":10,\"totalPrice\":10,\"unit\":\"PCS\",\"gWeig\":0.02,\"nWeig\":0.02}]}";
+    	String body = "{\"coid\":\"HXUCN\",\"clno\":\"YAF\",\"hubInCode\":\"ä¹‰ä¹ŒFEDEX-X-IP\",\"jobno\":\"test2020122101\",\"reCompany\":\"WEST\",\"reCountryCode\":\"US\",\"reCountry\":\"US\",\"reState\":\"NY\",\"reAddr\":\"5623  LGH  DKHGKG FHHHG \",\"reAddr2\":\"\",\"reZip\":\"10001\",\"reCity\":\"NEW YORK\",\"reConsinee\":\"WEST\",\"reTel\":\"5642256521\",\"reCctaxNo\":\"\",\"sdCompany\":\"SZ GM CO LTD\",\"sdCountryCode\":\"CN\",\"sdCountry\":\"CN\",\"sdState\":\"BAOAN\",\"sdAddr\":\"11 Blocks 202Huangtian Jinbi Industrial Zone, Baoan District, Shenzhen City\",\"sdAddr2\":\"\",\"sdAddr3\":\"\",\"sdCity\":\"SZ\",\"sdZip\":\"518102\",\"sdName\":\"SZ GM CO LTD\",\"sdTel\":\"13510522499\",\"pcs\":1,\"shipWeig\":0.5,\"packing\":\"WPX\",\"packagingType\":\"YOUR_PACKAGING\",\"descrType\":\"\",\"contents\":\"hello\",\"contents2\":\"\",\"contents3\":\"\",\"contentsCn\":\"\",\"decValue\":10,\"codCharge\":222,\"remark\":\"\",\"randAppendJobno\":1,\"invoice\":[{\"eDescrNamee\":\"SHOES\",\"descrName\":\"é‹å­\",\"hsCode\":\"123123\",\"qty\":1,\"price\":10,\"totalPrice\":10,\"unit\":\"PCS\",\"gWeig\":0.02,\"nWeig\":0.02}]}";
     	ZmRequest client=new ZmRequest(appKey,appSecret,nonce,version);
-    	String token=client.getToken(url + "/auth/access/token");
+    	// è¿™æ˜¯æ‰“å•çš„tokenè·å–æ¥å£ï¼Œä¼šè‡ªåŠ¨è§£æè¿”å›å€¼çš„token,è®¢å•æ¥å£è¿™é‡Œè¦æ‰‹åŠ¨è§£æ åˆ‡è®°
+	String token=client.getToken(url + "/auth/access/token");
     	client.setToken(token);
     	
-    	//4 µ÷ÓÃ´òµ¥½Ó¿Ú
+    	//4 è°ƒç”¨æ‰“å•æ¥å£
         Map<String,Object> params =new HashMap<String,Object>();
         params.put("body1", body);
         client.setDatas(params);
         
         String result = client.request(url+"/print", "post");
-        System.out.println("´òµ¥·µ»Ø:"+result);
+        System.out.println("æ‰“å•è¿”å›:"+result);
 	}
 
 	 
 
 	/**
-	 * µ÷ÓÃ ´òµ¥½Ó¿Ú
+	 * è°ƒç”¨ æ‰“å•æ¥å£
 	 * @param request
 	 * @param sourceToken
 	 * @param body
-	 *  ³É¹¦ÏìÓ¦
+	 *  æˆåŠŸå“åº”
 	 *  {body":{
 	 *			"airwayBillNumber":"3678381980",
 	 *			"airwayBillNumbers":["3678381980"],
@@ -49,7 +50,7 @@ public class TestPrint    {
 	 *			"conditionData":"",
 	 *			"downLoadUrls":["http://139.159.209.189:8090/group1/M00/B4/C9/wKgAFF_KBtKARcDEAAAVU18tw04142.pdf"],
 	 *			"exceptionSource":"pos",
-	 *			"flag":0,// ³É¹¦0       ·Ç0 Òì³£
+	 *			"flag":0,// æˆåŠŸ0       é0 å¼‚å¸¸
 	 *			"mergeLabelUrl":"http://139.159.209.189:8090/group1/M00/B4/C9/wKgAFF_KBtKARcDEAAAVU18tw04142.pdf",
 	 *			"messageReference":"d43f71f493af46b89ba3d4630a6842a7",
 	 *			"orderId":"",
@@ -57,20 +58,20 @@ public class TestPrint    {
 	 *			"proxyOrderId":"",
 	 *			"resultReturnMode":1
 	 *		},
-	 *		"message":"ÇëÇó³É¹¦",
+	 *		"message":"è¯·æ±‚æˆåŠŸ",
 	 *		"result_code":0
 	 *	}
-	 *  Ê§°ÜÏìÓ¦
+	 *  å¤±è´¥å“åº”
 	 *{"body":{
 	 *			"conditionCode":"1",
-	 *			"conditionData":"Ã»ÓĞ»ñÈ¡µ½¿Í»§´òµ¥¹æÔò",
+	 *			"conditionData":"æ²¡æœ‰è·å–åˆ°å®¢æˆ·æ‰“å•è§„åˆ™",
 	 *			"exceptionSource":"pos",
 	 *			"flag":1,
 	 *			"pieceMarks":[],
 	 *			"proxyOrderId":"",
 	 *			"resultReturnMode":1
 	 *		},
-	 *		"message":"ÇëÇó³É¹¦",
+	 *		"message":"è¯·æ±‚æˆåŠŸ",
 	 *		"result_code":0
 	 *	}
 	 */
